@@ -1,0 +1,46 @@
+:root{
+  --card-bg: #ffffff;
+  --muted: #666;
+  --accent: #b80f0f;
+  --text: #111;
+}
+
+.home-private-container{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:32px;
+  align-items:center;
+}
+
+.home-private-section{
+  width:100%;
+  max-width:960px;
+  background:var(--card-bg);
+  border-radius:8px;
+  padding:20px;
+  box-shadow:0 1px 6px rgba(0,0,0,0.05);
+}
+
+.home-private-section h2{
+  margin:0 0 12px 0;
+  color:var(--text);
+  font-size:18px;
+}
+
+.file-upload-section{width:100%;}
+.file-input-wrapper{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.real-file-input{display:none}
+.file-label{background:var(--accent);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+.file-name{font-size:13px;color:var(--muted);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-btn{background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer}
+.upload-btn[disabled]{opacity:0.5;cursor:not-allowed}
+
+.home-private-select{padding:8px 10px;border-radius:6px;border:1px solid rgba(184,15,15,0.12)}
+
+.records-table-wrapper{margin-top:12px;overflow:auto}
+.records-table{width:100%;border-collapse:collapse;font-size:14px;color:var(--text)}
+.records-table th,.records-table td{padding:8px;border-bottom:1px solid #f0f0f0;text-align:left}
+.content-cell{max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.status-message{margin-top:10px;color:var(--muted);font-size:13px}
