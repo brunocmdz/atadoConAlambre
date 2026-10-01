@@ -11,6 +11,8 @@
   gap:24px;
   padding:32px;
   align-items:center;
+  background:#f3f8ff;
+  min-height: calc(100vh - 80px);
 }
 
 .home-private-section{

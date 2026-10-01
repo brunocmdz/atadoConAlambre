@@ -5,12 +5,11 @@
   font-family: 'Inter', sans-serif;
 }
 
-
 body {
-  color: #ffffff;
+  color: #0f3d66;
   min-height: 100vh;
+  background: linear-gradient(135deg, #edf6ff 0%, #fffaf7 100%);
 }
-
 
 .register-container {
   display: flex;
@@ -20,82 +19,92 @@ body {
   padding: 80px 20px;
   min-height: 100vh;
   text-align: center;
+  background: linear-gradient(135deg, #edf6ff 0%, #fffaf7 100%);
 }
 
 .register-container h2 {
+  color: #0f3d66;
   font-size: 22px;
   margin-bottom: 40px;
-  font-weight: 600;
+  font-weight: 700;
 }
-
 
 .form-box {
   width: 460px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #dceafc;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(10, 93, 183, 0.12);
 }
 
 .form-row {
   display: flex;
   gap: 10px;
+  width: 100%;
 }
 
 .form-row input {
   flex: 1;
+  min-width: 0;
 }
 
-
 .form-box input {
-  background: transparent;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 2px;
+  background: #fff;
+  border: 1px solid #bfd7f7;
+  color: #0f3d66;
+  padding: 12px 14px;
+  border-radius: 12px;
   font-size: 14px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-box input::placeholder {
+  color: #5d7ea5;
 }
 
 .form-box input:focus {
-  border-color: #b80f0f;
+  border-color: #0a5db7;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(10, 93, 183, 0.08);
 }
-
 
 .form-box button {
   margin-top: 10px;
   padding: 12px;
-  border: 1px solid #b80f0f;
-  background-color: transparent;
-  color: #b80f0f;
-  font-weight: 500;
+  border: none;
+  background: #0a5db7;
+  color: #fff;
+  font-weight: 700;
   font-size: 15px;
-  border-radius: 2px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 8px 18px rgba(10, 93, 183, 0.18);
 }
 
 .form-box button:hover {
-  background-color: #b80f0f;
-  color: #fff;
+  background: #0c6fdc;
+  transform: translateY(-1px);
 }
-
 
 .form-terms {
   font-size: 11px;
-  color: #aaa;
+  color: #45658c;
   margin-top: 8px;
 }
 
 .form-terms a {
-  color: #b80f0f;
+  color: #0a5db7;
   text-decoration: none;
 }
 
-
 .footer {
-  background-color: #1e1e1e;
-  color: #fff;
+  background: linear-gradient(135deg, #3d4699 0%, #edf6ff 45%, #f79c34 100%);
+  color: #0f3d66;
   padding: 40px 60px;
   display: flex;
   justify-content: center;
@@ -104,7 +113,6 @@ body {
   font-size: 13px;
   line-height: 1.6;
 }
-
 
 @media (max-width: 768px) {
   .form-box {

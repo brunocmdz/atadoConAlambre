@@ -6,7 +6,7 @@ function Navbar({ onRegisterClick, onLoginClick, onHomeClick, onLogoutClick, isL
     <div className="container">
       <nav className='navbar'>
         <div className="brand-logo">
-          <a onClick={onHomeClick} className="menu-item">GAINRACKS</a>
+          <a onClick={onHomeClick} className="menu-item">AtadoConAlambre</a>
         </div>
         <div className='auth-buttons'>
           <div id='login_btns'>

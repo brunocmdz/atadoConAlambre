@@ -1,5 +1,5 @@
 * {
-  color: white;
+  color: #0f3d66;
 }
 /* Alinea el texto a la derecha dentro del contenedor. */
 .text-container {
@@ -9,21 +9,21 @@
   con un ancho del 85% del contenedor disponible, una altura mínima de 500px, y un fondo rojo oscuro.
   También añade márgenes superior e inferior de 150px. */
 
-.home-public-root{font-family: 'Arial', sans-serif; color:#fff; background:#0f0f0f; padding-top:72px}
+.home-public-root{font-family: 'Arial', sans-serif; color:#fff; background:#f3f8ff; padding-top:32px}
 
-.hero{display:flex;align-items:stretch;gap:0;max-width:1100px;margin:40px auto;padding:0 16px;width:100%;height:480px}
+.hero{display:flex;align-items:stretch;gap:0;max-width:1100px;margin:24px auto 0;padding:0 16px;width:100%;height:480px}
 .hero-text{width:48%;display:flex;align-items:center}
 .hero-image{width:52%;display:flex;align-items:stretch}
-.card-red{background:#b80f0f;padding:36px;color:#fff;border-radius:3px;box-shadow:0 2px 0 rgba(0,0,0,0.2);height:100%;display:flex;flex-direction:column;justify-content:center}
+.card-red{background:#0a5db7;padding:36px;color:#fff;border-radius:3px;box-shadow:0 2px 0 rgba(0,0,0,0.2);height:100%;display:flex;flex-direction:column;justify-content:center}
 .hero-image img{width:100%;height:100%;object-fit:cover;border-radius:4px}
-.card-red h3{margin:0 0 12px 0;font-size:20px}
-.card-red p{margin:8px 0;line-height:1.5;font-size:14px}
+.card-red h3{margin:0 0 12px 0;font-size:20px;color:#fff}
+.card-red p{margin:8px 0;line-height:1.5;font-size:14px;color:#fff}
 /* Configura el ancho completo de la ventana del navegador y una altura fija para las imágenes,
   asegurando que no se estiren más allá de sus dimensiones máximas. */
-.cta{display:flex;justify-content:center;padding:32px 0;margin:28px 0 40px}
+.cta{display:flex;justify-content:center;padding:32px 0;margin:36px 0 40px}
 /* Use a matching inner container so CTA aligns with .hero edges */
 .cta-inner{max-width:1100px;margin:0 auto;padding:0 16px;width:100%}
-.cta-content{width:100%;text-align:center;padding:36px 0;background:#b80f0f}
+.cta-content{width:100%;text-align:center;padding:36px 0;background:#0a5db7}
 .cta-content .cta-text{margin:0 auto 22px;max-width:820px;font-size:16px;line-height:1.6;color:#fff;padding:0 24px}
 .cta-btn{background:#141414;color:#fff;padding:10px 22px;border-radius:4px;border:none;cursor:pointer}
 .cta-btn:hover{opacity:0.95}
