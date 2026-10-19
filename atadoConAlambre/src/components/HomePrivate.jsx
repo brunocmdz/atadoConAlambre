@@ -10,9 +10,14 @@ const HomePrivate = () => {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Estados para la funcionalidad de eliminación con checkboxes
+  // Estados para eliminación
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+
+  // Estados para edición
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editFormData, setEditFormData] = useState({ nombre: '', cantidad: '', area: '' });
 
   // Cargar elementos al montar el componente
   useEffect(() => {
@@ -56,7 +61,7 @@ const HomePrivate = () => {
     setShowAddForm(false);
   };
 
-  // Alternar la selección de un checkbox individual
+  // Alternar selección para eliminación
   const handleCheckboxChange = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
@@ -65,13 +70,51 @@ const HomePrivate = () => {
     }
   };
 
-  // Alternar el modo de eliminación
+  // Modos de vista
   const toggleDeleteMode = () => {
     setIsDeleteMode(!isDeleteMode);
-    setSelectedIds([]); // Limpiar selecciones al entrar o salir
+    setIsEditMode(false);
+    setSelectedIds([]);
+    setEditingId(null);
   };
 
-  // Confirmar y ejecutar la eliminación en la BD
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+    setIsDeleteMode(false);
+    setSelectedIds([]);
+    setEditingId(null);
+  };
+
+  // Seleccionar ítem a editar mediante checkbox
+  const handleEditCheckboxChange = (item) => {
+    if (editingId === item.id) {
+      setEditingId(null);
+      setEditFormData({ nombre: '', cantidad: '', area: '' });
+    } else {
+      setEditingId(item.id);
+      setEditFormData({ nombre: item.nombre, cantidad: item.cantidad, area: item.area });
+    }
+  };
+
+  // Confirmar y guardar la edición
+  const handleConfirmEdit = async () => {
+    if (!editingId) {
+      alert('Por favor, seleccioná un elemento para editar.');
+      return;
+    }
+
+    try {
+      const response = await axios.put(`http://localhost:3000/items/${editingId}`, editFormData);
+
+      setItems(items.map((item) => (item.id === editingId ? response.data : item)));
+      setEditingId(null);
+      setIsEditMode(false);
+    } catch (error) {
+      console.error('Error al editar el elemento:', error);
+    }
+  };
+
+  // Confirmar eliminación
   const handleConfirmDelete = async () => {
     if (selectedIds.length === 0) {
       alert('Por favor, seleccioná al menos un elemento para eliminar.');
@@ -83,7 +126,6 @@ const HomePrivate = () => {
         data: { ids: selectedIds }
       });
 
-      // Actualizar el estado filtrando los elementos eliminados
       setItems(items.filter((item) => !selectedIds.includes(item.id)));
       setSelectedIds([]);
       setIsDeleteMode(false);
@@ -92,7 +134,6 @@ const HomePrivate = () => {
     }
   };
 
-  // Filtrar los elementos según lo que se escriba en la barra de búsqueda
   const filteredItems = items.filter((item) =>
     item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.area.toLowerCase().includes(searchTerm.toLowerCase())
@@ -118,11 +159,31 @@ const HomePrivate = () => {
               className="upload-btn" 
               onClick={() => {
                 setShowAddForm(!showAddForm);
-                if (isDeleteMode) setIsDeleteMode(false);
+                setIsDeleteMode(false);
+                setIsEditMode(false);
               }}
             >
               {showAddForm ? 'Cerrar' : 'Agregar'}
             </button>
+
+            <button 
+              type="button" 
+              className={`upload-btn ${isEditMode ? '' : 'edit-btn'}`}
+              onClick={toggleEditMode}
+            >
+              {isEditMode ? 'Cancelar' : 'Editar'}
+            </button>
+
+            {isEditMode && (
+              <button 
+                type="button" 
+                className="upload-btn"
+                onClick={handleConfirmEdit}
+              >
+                Confirmar edición
+              </button>
+            )}
+
             <button 
               type="button" 
               className={`upload-btn ${isDeleteMode ? '' : 'delete-btn'}`}
@@ -143,7 +204,7 @@ const HomePrivate = () => {
           </div>
         </div>
 
-        {/* Formulario desplegable para agregar */}
+        {/* Formulario para agregar */}
         {showAddForm && (
           <form className="add-form-container" onSubmit={handleSave}>
             <div className="form-group">
@@ -188,7 +249,7 @@ const HomePrivate = () => {
           <table className="records-table">
             <thead>
               <tr>
-                {isDeleteMode && <th>Seleccionar</th>}
+                {(isDeleteMode || isEditMode) && <th>Seleccionar</th>}
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Cantidad</th>
@@ -198,7 +259,7 @@ const HomePrivate = () => {
             <tbody>
               {filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={isDeleteMode ? 5 : 4} className="empty-table-msg">
+                  <td colSpan={(isDeleteMode || isEditMode) ? 5 : 4} className="empty-table-msg">
                     No se encontraron elementos guardados.
                   </td>
                 </tr>
@@ -215,10 +276,55 @@ const HomePrivate = () => {
                         />
                       </td>
                     )}
+
+                    {isEditMode && (
+                      <td style={{ textAlign: 'center' }}>
+                        <input 
+                          type="checkbox"
+                          checked={editingId === item.id}
+                          onChange={() => handleEditCheckboxChange(item)}
+                          style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                        />
+                      </td>
+                    )}
+
                     <td>{item.id}</td>
-                    <td>{item.nombre}</td>
-                    <td>{item.cantidad}</td>
-                    <td>{item.area}</td>
+
+                    {/* Mostrar campos de texto editables si el ítem está seleccionado para editar */}
+                    {isEditMode && editingId === item.id ? (
+                      <>
+                        <td>
+                          <input 
+                            type="text" 
+                            className="search-input"
+                            value={editFormData.nombre} 
+                            onChange={(e) => setEditFormData({ ...editFormData, nombre: e.target.value })} 
+                          />
+                        </td>
+                        <td>
+                          <input 
+                            type="text" 
+                            className="search-input"
+                            value={editFormData.cantidad} 
+                            onChange={(e) => setEditFormData({ ...editFormData, cantidad: e.target.value })} 
+                          />
+                        </td>
+                        <td>
+                          <input 
+                            type="text" 
+                            className="search-input"
+                            value={editFormData.area} 
+                            onChange={(e) => setEditFormData({ ...editFormData, area: e.target.value })} 
+                          />
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{item.nombre}</td>
+                        <td>{item.cantidad}</td>
+                        <td>{item.area}</td>
+                      </>
+                    )}
                   </tr>
                 ))
               )}

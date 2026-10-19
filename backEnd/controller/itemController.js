@@ -24,7 +24,7 @@ const createItem = async (req, res) => {
 // Eliminar múltiples elementos
 const deleteItems = async (req, res) => {
   try {
-    const { ids } = req.body; // Se espera un array de IDs, por ejemplo: [1, 2]
+    const { ids } = req.body;
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: 'Debe proporcionar una lista de IDs para eliminar' });
     }
@@ -41,8 +41,31 @@ const deleteItems = async (req, res) => {
   }
 };
 
+// Actualizar un elemento
+const updateItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, cantidad, area } = req.body;
+
+    const item = await Item.findByPk(id);
+    if (!item) {
+      return res.status(404).json({ error: 'Elemento no encontrado' });
+    }
+
+    item.nombre = nombre;
+    item.cantidad = cantidad;
+    item.area = area;
+    await item.save();
+
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el elemento' });
+  }
+};
+
 module.exports = {
   getItems,
   createItem,
-  deleteItems
+  deleteItems,
+  updateItem
 };

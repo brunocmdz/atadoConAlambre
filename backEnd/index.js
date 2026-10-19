@@ -1,12 +1,12 @@
 require('./model/user');
-require('./model/item'); // Modelo de items
+require('./model/item');
 
 const express = require('express');
 const app = express();
 const port = 3000;
 const sequelize = require('./config/database');
 const { getUser, registerUser, getUserByEmail, login, setUserState } = require('./controller/controller');
-const { getItems, createItem, deleteItems } = require('./controller/itemController'); // Controlador de items
+const { getItems, createItem, deleteItems, updateItem } = require('./controller/itemController');
 const { isAuth, isAdmin } = require('./midlewares/auth');
 
 app.use(express.json());
@@ -34,6 +34,7 @@ app.put('/users/state', isAuth, isAdmin, setUserState);
 app.get('/items', getItems);
 app.post('/items', createItem);
 app.delete('/items', deleteItems);
+app.put('/items/:id', updateItem);
 
 app.listen(port, async () => {
   try {
