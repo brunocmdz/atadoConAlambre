@@ -21,7 +21,28 @@ const createItem = async (req, res) => {
   }
 };
 
+// Eliminar múltiples elementos
+const deleteItems = async (req, res) => {
+  try {
+    const { ids } = req.body; // Se espera un array de IDs, por ejemplo: [1, 2]
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Debe proporcionar una lista de IDs para eliminar' });
+    }
+
+    await Item.destroy({
+      where: {
+        id: ids
+      }
+    });
+
+    res.json({ message: 'Elementos eliminados correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar los elementos' });
+  }
+};
+
 module.exports = {
   getItems,
-  createItem
+  createItem,
+  deleteItems
 };

@@ -8,8 +8,13 @@ const HomePrivate = () => {
   const [cantidad, setCantidad] = useState('');
   const [area, setArea] = useState('');
   const [items, setItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Cargar elementos al cargar el componente
+  // Estados para la funcionalidad de eliminación con checkboxes
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  // Cargar elementos al montar el componente
   useEffect(() => {
     fetchItems();
   }, []);
@@ -51,6 +56,48 @@ const HomePrivate = () => {
     setShowAddForm(false);
   };
 
+  // Alternar la selección de un checkbox individual
+  const handleCheckboxChange = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
+
+  // Alternar el modo de eliminación
+  const toggleDeleteMode = () => {
+    setIsDeleteMode(!isDeleteMode);
+    setSelectedIds([]); // Limpiar selecciones al entrar o salir
+  };
+
+  // Confirmar y ejecutar la eliminación en la BD
+  const handleConfirmDelete = async () => {
+    if (selectedIds.length === 0) {
+      alert('Por favor, seleccioná al menos un elemento para eliminar.');
+      return;
+    }
+
+    try {
+      await axios.delete('http://localhost:3000/items', {
+        data: { ids: selectedIds }
+      });
+
+      // Actualizar el estado filtrando los elementos eliminados
+      setItems(items.filter((item) => !selectedIds.includes(item.id)));
+      setSelectedIds([]);
+      setIsDeleteMode(false);
+    } catch (error) {
+      console.error('Error al eliminar los elementos:', error);
+    }
+  };
+
+  // Filtrar los elementos según lo que se escriba en la barra de búsqueda
+  const filteredItems = items.filter((item) =>
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.area.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="home-private-container">
       <div className="home-private-section">
@@ -59,19 +106,40 @@ const HomePrivate = () => {
         <div className="search-container">
           <input 
             type="text" 
-            placeholder="Buscar..." 
+            placeholder="Buscar por nombre o área..." 
             className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="search-buttons-wrapper">
             <button type="button" className="upload-btn">Buscar</button>
             <button 
               type="button" 
               className="upload-btn" 
-              onClick={() => setShowAddForm(!showAddForm)}
+              onClick={() => {
+                setShowAddForm(!showAddForm);
+                if (isDeleteMode) setIsDeleteMode(false);
+              }}
             >
               {showAddForm ? 'Cerrar' : 'Agregar'}
             </button>
-            <button type="button" className="upload-btn delete-btn">Eliminar</button>
+            <button 
+              type="button" 
+              className={`upload-btn ${isDeleteMode ? '' : 'delete-btn'}`}
+              onClick={toggleDeleteMode}
+            >
+              {isDeleteMode ? 'Cancelar' : 'Eliminar'}
+            </button>
+
+            {isDeleteMode && (
+              <button 
+                type="button" 
+                className="upload-btn delete-btn"
+                onClick={handleConfirmDelete}
+              >
+                Confirmar selección ({selectedIds.length})
+              </button>
+            )}
           </div>
         </div>
 
@@ -120,6 +188,7 @@ const HomePrivate = () => {
           <table className="records-table">
             <thead>
               <tr>
+                {isDeleteMode && <th>Seleccionar</th>}
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Cantidad</th>
@@ -127,13 +196,25 @@ const HomePrivate = () => {
               </tr>
             </thead>
             <tbody>
-              {items.length === 0 ? (
+              {filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="empty-table-msg">No hay elementos guardados en la base de datos.</td>
+                  <td colSpan={isDeleteMode ? 5 : 4} className="empty-table-msg">
+                    No se encontraron elementos guardados.
+                  </td>
                 </tr>
               ) : (
-                items.map((item) => (
+                filteredItems.map((item) => (
                   <tr key={item.id}>
+                    {isDeleteMode && (
+                      <td style={{ textAlign: 'center' }}>
+                        <input 
+                          type="checkbox"
+                          checked={selectedIds.includes(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                          style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                        />
+                      </td>
+                    )}
                     <td>{item.id}</td>
                     <td>{item.nombre}</td>
                     <td>{item.cantidad}</td>
