@@ -23,8 +23,6 @@ const getUserByEmail = async(req, res) => {
         res.status(500).json({ message: 'Error interno del servidor', error: err.message });
     }
 };
-
-
 const editUser = async(req, res) => {
     try {
         const {firstName, lastName,  id_usuario } = req.query;
@@ -65,17 +63,19 @@ const setUserState = async (req, res) => {
 };
 async function registerUser(req, res) {
     try {
-        const { email, password, firstName, lastName } = req.query;
+        const { email, password, firstName, lastName, role } = req.query;
+        const finalRole = role === 'admin' ? 'admin' : 'user';
 
-        // Encriptar la contraseña antes de guardar
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const users = await User.create({
             email,
-            password: hashedPassword,  // ← ya encriptada
+            password: hashedPassword,
             firstName,
             lastName,
-            state: true
+            state: true,
+            role: finalRole,
+            isAdmin: finalRole === 'admin'
         });
 
         res.json(users);
@@ -89,27 +89,20 @@ async function login(req, res) {
   try {
     const { email, password } = req.query;
 
-    // Buscar usuario solo por email
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    // Comparar contraseña encriptada
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    // impedir login si el usuario está desactivado
     if (user.state === false || user.state === 'false' || user.state === 0) {
         return res.status(403).json({ message: 'Usuario desactivado' });
-    }
-    // impedir login si el usuario está desactivado
-    if (user.state === false) {
-            return res.status(403).json({ message: 'Usuario desactivado' });
     }
 
     res.json({
@@ -117,7 +110,8 @@ async function login(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      isAdmin: user.isAdmin
+      role: user.role || 'user',
+      isAdmin: Boolean(user.isAdmin)
     });
 
   } catch (err) {

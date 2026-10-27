@@ -31,7 +31,9 @@
  
   .auth-buttons #login,
   .auth-buttons #register,
-  .auth-buttons #logout {
+  .auth-buttons #logout,
+  .auth-buttons #admin-panel,
+  .admin-toggle-btn {
     border-radius: 999px;
     border: 2px solid #0a5db7;
     background-color: #ffffff;
@@ -47,7 +49,9 @@
 
   .auth-buttons #login:hover,
   .auth-buttons #register:hover,
-  .auth-buttons #logout:hover {
+  .auth-buttons #logout:hover,
+  .auth-buttons #admin-panel:hover,
+  .admin-toggle-btn:hover {
     background: #ff9f43;
     color: #ffffff;
     border-color: transparent;
@@ -65,6 +69,95 @@
     padding: 8px 12px;
     cursor: pointer;
     color: #0f3d66;
+  }
+
+  .admin-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 30, 44, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+  }
+
+  .admin-panel {
+    width: min(1100px, 92vw);
+    max-height: 80vh;
+    overflow: auto;
+    background: #ffffff;
+    border: 1px solid #d9eafc;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(8, 32, 62, 0.18);
+    padding: 24px;
+    position: relative;
+  }
+
+  .admin-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .admin-panel-header h2 {
+    margin: 0;
+    color: #0f3d66;
+    font-size: 1.8rem;
+  }
+
+  .admin-close-btn {
+    border: none;
+    background: transparent;
+    color: #0f3d66;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.96rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e7edf5;
+    text-align: left;
+    color: #173c63;
+  }
+
+  .admin-table th {
+    background: #edf5ff;
+    font-weight: 700;
+  }
+
+  .admin-toggle-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #e8eef8;
+    color: #4d6177;
+    border-color: #c4d2e5;
+  }
+
+  .admin-panel-error {
+    color: #b42318;
+    font-weight: 600;
   }
 
   .notificacion-img {

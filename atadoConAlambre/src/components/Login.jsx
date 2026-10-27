@@ -12,13 +12,14 @@ function Login() {
 
       alert("Inicio de sesión exitoso");
 
-      const { id, firstName, lastName, isAdmin } = response.data;
+      const { id, firstName, lastName, isAdmin, role } = response.data;
       localStorage.setItem("userId", id);
       localStorage.setItem("userEmail", email);
       localStorage.setItem("userName", firstName);
       localStorage.setItem("userLastName", lastName);
-      localStorage.setItem("isAdmin", isAdmin);
-      console.log("Usuario logueado:", firstName, lastName);    
+      localStorage.setItem("isAdmin", String(Boolean(isAdmin)));
+      localStorage.setItem("role", role || 'user');
+      console.log("Usuario logueado:", firstName, lastName, role || 'user');
       window.location.reload();
     } catch (error) {
       alert(error.message);

@@ -1,7 +1,6 @@
 import './styles/navbar.css';
-import { useEffect, useState } from 'react';
 
-function Navbar({ onRegisterClick, onLoginClick, onHomeClick, onLogoutClick, isLoggedIn, userName }) {
+function Navbar({ onRegisterClick, onLoginClick, onHomeClick, onLogoutClick, isLoggedIn, isAdmin, showAdminPanel, onToggleAdminPanel, userName }) {
   return (
     <div className="container">
       <nav className='navbar'>
@@ -13,6 +12,11 @@ function Navbar({ onRegisterClick, onLoginClick, onHomeClick, onLogoutClick, isL
             {isLoggedIn ? (
               <>
                 <span className="estado-logeado">Hola, {userName}</span>
+                {isAdmin && (
+                  <button className='menu-item admin-button' onClick={onToggleAdminPanel} id='admin-panel'>
+                    {showAdminPanel ? 'Ocultar panel' : 'Panel admin'}
+                  </button>
+                )}
                 <button className='menu-item' onClick={onLogoutClick} id='logout'>Cerrar sesión</button>
               </>
             ) : (

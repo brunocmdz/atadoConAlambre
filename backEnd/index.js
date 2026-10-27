@@ -2,9 +2,11 @@ require('./model/user');
 require('./model/item');
 
 const express = require('express');
+const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 const sequelize = require('./config/database');
+const User = require('./model/user');
 const { getUser, registerUser, getUserByEmail, login, setUserState } = require('./controller/controller');
 const { getItems, createItem, deleteItems, updateItem } = require('./controller/itemController');
 const { isAuth, isAdmin } = require('./midlewares/auth');
@@ -40,6 +42,21 @@ app.listen(port, async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync({ alter: true, force: false });
+
+    const adminExists = await User.findOne({ where: { email: 'admin@atado.com' } });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      await User.create({
+        email: 'admin@atado.com',
+        password: hashedPassword,
+        firstName: 'Admin',
+        lastName: 'Sistema',
+        state: true,
+        role: 'admin',
+        isAdmin: true
+      });
+    }
+
     console.log(`El servidor esta corriendo en el puerto ${port}`);
   } catch (error) {
     console.error('Error al conectar con la base de datos:', error);
